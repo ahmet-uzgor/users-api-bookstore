@@ -6,4 +6,7 @@ import (
 
 func mapUrls() {
 	router.GET("/health", controllers.CheckHealth)
+	router.GET("users/:user_id", controllers.FindUserById)
+	router.GET("users/search", controllers.SearchUser)
+	router.POST("/users", controllers.CreateUser)
 }
