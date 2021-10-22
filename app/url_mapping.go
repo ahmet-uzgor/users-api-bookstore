@@ -1,12 +1,13 @@
 package app
 
 import (
-	"github.com/ahmet-uzgor/users-api-bookstore/controllers"
+	"github.com/ahmet-uzgor/users-api-bookstore/controllers/health"
+	"github.com/ahmet-uzgor/users-api-bookstore/controllers/users"
 )
 
 func mapUrls() {
-	router.GET("/health", controllers.CheckHealth)
-	router.GET("users/:user_id", controllers.FindUserById)
-	router.GET("users/search", controllers.SearchUser)
-	router.POST("/users", controllers.CreateUser)
+	router.GET("/health", health.CheckHealth)
+	router.GET("users/:user_id", users.FindUserById)
+	router.GET("users/search", users.SearchUser)
+	router.POST("/users", users.CreateUser)
 }
