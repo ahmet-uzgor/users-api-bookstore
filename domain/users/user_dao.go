@@ -11,12 +11,12 @@ var (
 )
 
 func (user *User) Save() *errors.RestError {
-	if mockUserDB[user.Id] != nil {
+	hasUser := mockUserDB[user.Id]
+	if hasUser != nil {
+		if hasUser.Email == user.Email {
+			return errors.BadRequestError("email has used for another person")
+		}
 		return errors.BadRequestError("user has already exits!")
-	}
-
-	if mockUserDB[user.Id].Email == user.Email {
-		return errors.BadRequestError("email has used for another person")
 	}
 
 	mockUserDB[user.Id] = user
