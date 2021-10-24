@@ -1,16 +1,14 @@
 package users
 
 import (
-	"fmt"
-
 	usersdb "github.com/ahmet-uzgor/users-api-bookstore/database/mysql/users_db"
 	dateutil "github.com/ahmet-uzgor/users-api-bookstore/utils/date_util"
 	"github.com/ahmet-uzgor/users-api-bookstore/utils/errors"
 )
 
 var (
-	mockUserDB  = make(map[int64]*User)
 	insertQuery = "INSERT INTO users(first_name, last_name, email, date_created) VALUES(?, ?, ?, ?);"
+	selectQuery = "SELECT * FROM users WHERE id=?;"
 )
 
 func (user *User) Save() *errors.RestError {
@@ -37,10 +35,17 @@ func (user *User) Save() *errors.RestError {
 }
 
 func (user *User) Get() *errors.RestError {
-	if mockUserDB[user.Id] != nil {
-		fmt.Println(mockUserDB[user.Id])
-		return nil
+	statement, err := usersdb.Client.Prepare(selectQuery)
+	if err != nil {
+		return errors.IntervalServerError(err.Error())
 	}
 
-	return errors.NotFoundError("user not found")
+	defer statement.Close()
+
+	queryResult := statement.QueryRow(user.Id)
+	if err := queryResult.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.CreatedDate); err != nil {
+		return errors.IntervalServerError(err.Error())
+	}
+
+	return nil
 }
