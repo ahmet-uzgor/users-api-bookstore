@@ -23,3 +23,11 @@ func NotFoundError(errorMessage string) *RestError {
 		Error:   "not_found",
 	}
 }
+
+func IntervalServerError(errorMessage string) *RestError {
+	return &RestError{
+		Message: errorMessage,
+		Code:    http.StatusInternalServerError,
+		Error:   "interval_server_error",
+	}
+}
