@@ -20,7 +20,7 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	result, createUserErr := services.CreateUser(user)
+	result, createUserErr := services.UsersService.CreateUser(user)
 	if createUserErr != nil {
 		c.JSON(createUserErr.Code, createUserErr)
 		return
@@ -39,7 +39,7 @@ func FindUserById(c *gin.Context) {
 		return
 	}
 
-	userFound, notFound := services.GetUserById(userId)
+	userFound, notFound := services.UsersService.GetUserById(userId)
 
 	if notFound != nil {
 		c.JSON(http.StatusNotFound, notFound)
@@ -69,7 +69,7 @@ func UpdateUser(c *gin.Context) {
 
 	isPartial := c.Request.Method == http.MethodPatch
 
-	updateResult, updateErr := services.UpdateUser(user, isPartial)
+	updateResult, updateErr := services.UsersService.UpdateUser(user, isPartial)
 	if updateErr != nil {
 		c.JSON(updateErr.Code, updateErr)
 	}

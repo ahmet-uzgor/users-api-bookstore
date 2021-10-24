@@ -6,7 +6,20 @@ import (
 	"github.com/ahmet-uzgor/users-api-bookstore/utils/errors"
 )
 
-func CreateUser(user users.User) (*users.User, *errors.RestError) {
+var (
+	UsersService UserServiceInterface = &usersService{}
+)
+
+type usersService struct {
+}
+
+type UserServiceInterface interface {
+	CreateUser(users.User) (*users.User, *errors.RestError)
+	GetUserById(int64) (*users.User, *errors.RestError)
+	UpdateUser(users.User, bool) (*users.User, *errors.RestError)
+}
+
+func (u *usersService) CreateUser(user users.User) (*users.User, *errors.RestError) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
@@ -18,7 +31,7 @@ func CreateUser(user users.User) (*users.User, *errors.RestError) {
 	return &user, nil
 }
 
-func GetUserById(userId int64) (*users.User, *errors.RestError) {
+func (u *usersService) GetUserById(userId int64) (*users.User, *errors.RestError) {
 	if err := usersdb.Client.Ping(); err != nil {
 		panic(err)
 	}
@@ -34,7 +47,7 @@ func GetUserById(userId int64) (*users.User, *errors.RestError) {
 	return &user, nil
 }
 
-func UpdateUser(user users.User, isPartial bool) (*users.User, *errors.RestError) {
+func (u *usersService) UpdateUser(user users.User, isPartial bool) (*users.User, *errors.RestError) {
 	current := users.User{
 		Id: user.Id,
 	}
