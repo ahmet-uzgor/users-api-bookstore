@@ -33,3 +33,30 @@ func GetUserById(userId int64) (*users.User, *errors.RestError) {
 
 	return &user, nil
 }
+
+func UpdateUser(user users.User, isPartial bool) (*users.User, *errors.RestError) {
+	current := users.User{
+		Id: user.Id,
+	}
+	if err := current.Get(); err != nil {
+		return nil, err
+	}
+
+	if isPartial {
+		if user.FirstName == "" {
+			user.FirstName = current.FirstName
+		}
+		if user.LastName == "" {
+			user.LastName = current.LastName
+		}
+		if user.Email == "" {
+			user.Email = current.FirstName
+		}
+	}
+
+	if err := user.Update(); err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

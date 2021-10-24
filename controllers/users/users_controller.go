@@ -48,3 +48,31 @@ func FindUserById(c *gin.Context) {
 
 	c.JSON(http.StatusOK, userFound)
 }
+
+func UpdateUser(c *gin.Context) {
+	userId, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, errors.BadRequestError("user id should be number"))
+		return
+	}
+
+	var user users.User
+
+	if bindErr := c.ShouldBindJSON(&user); err != nil {
+		badReqError := errors.BadRequestError(bindErr.Error())
+
+		c.JSON(badReqError.Code, badReqError)
+		return
+	}
+
+	user.Id = userId
+
+	isPartial := c.Request.Method == http.MethodPatch
+
+	updateResult, updateErr := services.UpdateUser(user, isPartial)
+	if updateErr != nil {
+		c.JSON(updateErr.Code, updateErr)
+	}
+
+	c.JSON(http.StatusOK, updateResult)
+}
