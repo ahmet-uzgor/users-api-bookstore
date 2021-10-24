@@ -52,7 +52,7 @@ func FindUserById(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	userId, err := strconv.ParseInt(c.Param("user_id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, errors.BadRequestError("user id should be number"))
+		c.JSON(http.StatusBadRequest, errors.BadRequestError("given user id should be number"))
 		return
 	}
 
