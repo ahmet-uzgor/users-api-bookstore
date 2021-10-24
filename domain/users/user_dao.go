@@ -7,12 +7,12 @@ import (
 )
 
 var (
-	insertQuery = "INSERT INTO users(first_name, last_name, email, date_created) VALUES(?, ?, ?, ?);"
-	selectQuery = "SELECT * FROM users WHERE id=?;"
+	insertUserQuery  = "INSERT INTO users(first_name, last_name, email, date_created) VALUES(?, ?, ?, ?);"
+	getUserByIDQuery = "SELECT * FROM users WHERE id=?;"
 )
 
 func (user *User) Save() *errors.RestError {
-	statement, err := usersdb.Client.Prepare(insertQuery)
+	statement, err := usersdb.Client.Prepare(insertUserQuery)
 	if err != nil {
 		return errors.IntervalServerError(err.Error())
 	}
@@ -35,7 +35,7 @@ func (user *User) Save() *errors.RestError {
 }
 
 func (user *User) Get() *errors.RestError {
-	statement, err := usersdb.Client.Prepare(selectQuery)
+	statement, err := usersdb.Client.Prepare(getUserByIDQuery)
 	if err != nil {
 		return errors.IntervalServerError(err.Error())
 	}
